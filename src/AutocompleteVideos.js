@@ -1,95 +1,83 @@
-import React, { Fragment, useState } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import List from "@material-ui/core/List";
-import Box from "@material-ui/core/Box";
-import axios from "axios";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
+import "isomorphic-fetch";
+function sleep(delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
+}
 const AutocompleteVideos = () => {
-  const [searched, setSearched] = useState(false);
-  const res = axios
-    .get("http://5e369354f7e55d0014ad5215.mockapi.io/list")
-    .then(function(response) {
-      console.log(response);
-    });
-  console.log(res);
-  // const videoInList = videosList.map(element => element.id);
-  // const list = videos.filter(obj => !videoInList.includes(obj.id));
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+  const loading = open && options.length === 0;
 
-  // let options = list.map(video => {
-  //     return {
-  //         id: video.id,
-  //         name: video.name,
-  //         thumbnail: video.thumbnail,
-  //         player_url: video.player_url
-  //     }
-  // });
+  React.useEffect(() => {
+    let active = true;
 
-  // const onInputChange = useCallback(debounce((e,value) => handleChangeSearch(value), 1000) , []);
+    if (!loading) {
+      return undefined;
+    }
 
-  // let timer = null;
-  // const setFindStr = () => {
-  //     if (timer) {
-  //         clearTimeout(timer);
-  //     }
-  //     timer = setTimeout(onInputChange, 1000);
-  // };
+    (async () => {
+      const response = await fetch(
+        "https://5e369354f7e55d0014ad5215.mockapi.io/list"
+      );
+      await sleep(1e3); // For demo purposes.
+      const countries = await response.json();
 
-  // const changeAutocomplete = (e, value) => {
-  //     handleChange(value);
-  //     setSearched(false);
-  //     setDisableDelete(true);
-  //     onInputChange()
-  // };
+      if (active) {
+        setOptions(Object.keys(countries).map(key => countries[key].item[0]));
+      }
+    })();
 
-  // useEffect(() => {
-  //     setFindStr();
-  //     return () => clearTimeout(timer);
-  // }, [videoInList]);
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  React.useEffect(() => {
+    if (!open) {
+      setOptions([]);
+    }
+  }, [open]);
 
   return (
-    <Fragment>
-      <Box>
-        <Autocomplete
-          id="videos-list"
-          // options={options}
-          // getOptionLabel={option => option.name}
-          // onInputChange={onInputChange}
-          // onChange={changeAutocomplete}
-          // disableClearable={true}
-          // loading={loading}
-          renderInput={params => {
-            if (!searched) {
-              params.inputProps.value = "";
-            }
-            return (
-              <TextField
-                {...params}
-                label="Search videos"
-                variant="outlined"
-                placeholder="Favorites"
-                fullWidth
-                onChange={() => setSearched(true)}
-                InputProps={{
-                  ...params.InputProps
-                  // endAdornment: (
-                  //     <React.Fragment>
-                  //         {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  //         {params.InputProps.endAdornment}
-                  //     </React.Fragment>
-                  // ),
-                }}
-              />
-            );
+    <Autocomplete
+      id="asynchronous-demo"
+      style={{ width: 300 }}
+      open={open}
+      onOpen={() => {
+        setOpen(true);
+      }}
+      onClose={() => {
+        setOpen(false);
+      }}
+      getOptionSelected={(option, value) => option.name === value.name}
+      getOptionLabel={option => option.name}
+      options={options}
+      loading={loading}
+      renderInput={params => (
+        <TextField
+          {...params}
+          label="Asynchronous"
+          fullWidth
+          variant="outlined"
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <React.Fragment>
+                {loading ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </React.Fragment>
+            )
           }}
         />
-      </Box>
-      <List>
-        {/* {videosList && videosList.map((list, index) => (
-                    <TodoList list={list} key={index} deleteItem={deleteItem} />
-                ))} */}
-      </List>
-    </Fragment>
+      )}
+    />
   );
 };
 

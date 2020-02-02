@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-
+import AutocompleteVideos from "./AutocompleteVideos";
 const status = ["pending", "process", "expiried", "blocked"];
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +33,7 @@ const Badges = () => {
         </Box>
       ))}
       <div>
-        <a href="/autocomplete">Autocomplete</a>
+        <AutocompleteVideos />
       </div>
     </Fragment>
   );
