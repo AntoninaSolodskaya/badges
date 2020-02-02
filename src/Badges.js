@@ -32,6 +32,9 @@ const Badges = () => {
           </Button>
         </Box>
       ))}
+      <div>
+        <a href="/autocomplete">Autocomplete</a>
+      </div>
     </Fragment>
   );
 };

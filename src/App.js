@@ -2,6 +2,7 @@ import React from "react";
 import "./styles.css";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import Badges from "./Badges";
+import AutocompleteVideos from "./AutocompleteVideos";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" component={Badges} />
+          <Route path="/autocomplete" component={AutocompleteVideos} />
         </Switch>
       </BrowserRouter>
     </div>
