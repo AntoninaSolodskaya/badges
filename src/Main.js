@@ -76,3 +76,31 @@
 
 //https://www.youtube.com/watch?v=u6Satpkn2yg&t=21s
 //Добавляем ООП к гостевой книге #3
+
+// export const useSelectedId = (initialValue = "") => {
+//   const [selectedId, setSelectedId] = useState(initialValue);
+//   const isIdSelected = (id) => selectedId === id;
+
+//   return {
+//     selectedId,
+//     setSelectedId,
+//     isIdSelected
+//   };
+// };
+
+// export const App = ({ initialValue, items }) => {
+//   const { setSelectedId, isIdSelected } = useSelectedId(initialValue);
+
+//   return (
+//     <ul>
+//       {items &&
+//         items.map(({ id }) => (
+//           <li
+//             key={id}
+//             onPress={() => setSelectedId(id)}
+//             isSelected={isIdSelected(id)}
+//           />
+//         ))}
+//     </ul>
+//   );
+// };
